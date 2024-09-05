@@ -11,11 +11,22 @@ lib.callback.register("stevo_policebadge:retrieveInfo", function(source)
     local job = player.getJob()
 
     
-    if job and job.grade_label then
-        badge_data.rank = job.grade_label  or "Unknown" -- Use grade label as rank
+  if job then
+    if job.grade_label then
+        -- ESX: Use grade label as rank
+        badge_data.rank = job.grade_label
+    elseif job.grade and job.grade.name then
+        -- QBCore: Use grade.name as rank
+        badge_data.rank = job.grade.name
     else
+        -- If neither are available, fallback to "Unknown"
         badge_data.rank = "Unknown"
     end
+else
+    -- If job is nil, fallback to "Unknown"
+    badge_data.rank = "Unknown"
+end
+
 
     badge_data.name = stevo_lib.GetName(source)
     
